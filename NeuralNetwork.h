@@ -1,19 +1,22 @@
 #include <iostream>
+#include <vector>
+
+using namespace std;
 
 class NeuralNetwork
 {
 private:
 	int numInput, numOutput, numLayers;
 	int* numEachLayer;
-	float**** members;
+	vector<vector<vector<vector<float>>>> members;
 
 public:
-	float*** getTableOf(int index);
+	vector<vector<vector<float>>> getTableOf(int index);
 
 	NeuralNetwork();
 	NeuralNetwork(int input,int* innerNodes,int output);
 
 	void init(int numNetworks);
-	float[] getOutputOfMember(int index,float* input);
+	vector<float> getOutputOfMember(int index,vector<float> input);
 	void nextGen(bool* toNext);
-}
+};

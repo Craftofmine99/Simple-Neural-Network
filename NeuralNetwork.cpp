@@ -1,8 +1,9 @@
 #include "NeuralNetwork.h"
+#include <array>
 
-float*** getTableOf(int index)
+vector<vector<vector<float>>> NeuralNetwork::getTableOf(int index)
 {
-	return members[index];
+
 }
 
 NeuralNetwork::NeuralNetwork()
@@ -19,37 +20,45 @@ NeuralNetwork::NeuralNetwork(int input,int* innerNodes,int output)
 
 void NeuralNetwork::init(int numNetworks)
 {
-	members = new float*[numNetworks];
+	members = vector<vector<vector<vector<float>>>>();
+	members.reserve(numNetworks);
 	for(int a = 0 ; a < numNetworks ; a++)
 	{
-		members[a] = new float*[numLayers + 1];
+		members.push_back(vector<vector<vector<float>>>());
+		members.at(a).reserve(numLayers + 1);
 		for(int b = 0 ; b < numLayers + 1 ; b++)
 		{
+			members.at(a).push_back(vector<vector<float>>());
 			if(b < numLayers)
-				members[a][b] = new float*[numEachLayer[b]];
+				members.at(a).at(b).reserve(numEachLayer[b]);
 			else
-				members[a][a] = new float*[numOutput];
+				members.at(a).at(b).reserve(numOutput);
 			for(int c = 0 ; c < numEachLayer[b] ; c++)
 			{
+				members.at(a).at(b).push_back(vector<float>());
 				if(b > 0)
-				{
-					members[a][b][c] = new float*[numInput];
-				}
+					members.at(a).at(b).at(c).reserve(numInput);
 				else
-				{
-					members[a][b][c] = new float*[numEachLayer[b-1]];
-				}
+					members.at(a).at(b).at(c).reserve(numEachLayer[b-1]);
 			}
 		}
 	}
 }
 
-float[] getOutputOfMember(int index,float* input)
+vector<float> NeuralNetwork::getOutputOfMember(int index,vector<float> input)
 {
+	vector<float> toReturn;
+	vector<vector<vector<float>>> member = members.at(index);
 
+	for(int a = 0 ; a < member.size() ; a++)
+	{
+
+	}
+
+	return toReturn;
 }
 
-void nextGen(bool* toNext)
+void NeuralNetwork::nextGen(bool* toNext)
 {
 
 }
