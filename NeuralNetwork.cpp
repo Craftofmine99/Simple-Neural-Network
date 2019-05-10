@@ -55,7 +55,7 @@ void NeuralNetwork::init(int numNetworks)
 vector<float> NeuralNetwork::getOutputOfMember(int index,vector<float> input)
 {
 	vector<vector<vector<float>>> weights = members[index];
-	vector<float> previous = vector<float>(input);
+	vector<float> previous = input;
 	vector<float> result;
 
 	for(int a = 0 ; a < weights.size() ; a++)
