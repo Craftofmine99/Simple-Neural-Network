@@ -13,16 +13,12 @@ vector<vector<vector<float>>> NeuralNetwork::getTableOf(int index)
 
 }
 
-NeuralNetwork::NeuralNetwork()
-{
-
-}
-
 NeuralNetwork::NeuralNetwork(int input,vector<int> innerNodes,int output)
 {
 	numInput = input;
 	numOutput = output;
 	numEachLayer = innerNodes;
+	this->input = vector<float>();
 }
 
 void NeuralNetwork::init(int numNetworks)
@@ -54,6 +50,9 @@ void NeuralNetwork::init(int numNetworks)
 
 vector<float> NeuralNetwork::getOutputOfMember(int index,vector<float> input)
 {
+	if(input.size() != numInput || index < 0 || index > numInput)
+		return vector<float>();
+
 	vector<vector<vector<float>>> weights = members[index];
 	vector<float> previous = input;
 	vector<float> result;
@@ -72,6 +71,43 @@ vector<float> NeuralNetwork::getOutputOfMember(int index,vector<float> input)
 		previous = result;
 	}
 	return result;
+}
+
+vector<float> NeuralNetwork::getOutputOfMember(int index)
+{
+	return this->getOutputOfMember(index,this->input);
+}
+
+vector<vector<float>> NeuralNetwork::getAllOutputs(vector<float> input)
+{
+	if(input.size() != numInput)
+		return vector<vector<float>>();
+
+	vector<vector<float>> toReturn = vector<vector<float>>();
+	toReturn.resize(members.size());
+
+	for(int i = 0 ; i < members.size() ; i++)
+		toReturn.emplace_back(this->getOutputOfMember(i,input));
+
+	return toReturn;
+}
+
+vector<vector<float>> NeuralNetwork::getAllOutputs()
+{
+	return this->getAllOutputs(this->input);
+}
+
+void NeuralNetwork::clearInput()
+{
+	this->input.clear();
+}
+
+bool NeuralNetwork::setInput(vector<float> input)
+{
+	if(input.size() != numInput)
+		return false;
+	this->input = input;
+	return true;
 }
 
 void NeuralNetwork::nextGen(bool* toNext)
