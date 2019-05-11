@@ -10,7 +10,10 @@ float sigmoid(float x)
 
 vector<vector<vector<float>>> NeuralNetwork::getTableOf(int index)
 {
-
+	if(index < 0 || index > members.size())
+		return vector<vector<vector<float>>>();
+	else 
+		return members[index];
 }
 
 NeuralNetwork::NeuralNetwork(int input,vector<int> innerNodes,int output)
