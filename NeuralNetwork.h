@@ -6,7 +6,10 @@ using namespace std;
 class NeuralNetwork
 {
 private:
-	int numInput, numOutput, numLayers;
+	mt19937 e2;
+	uniform_real_distribution<float> dist;
+	int numInput, numOutput, numLayers, numGenerations;
+	bool constMembers;
 	vector<int> numEachLayer;
 	vector<vector<vector<vector<float>>>> members;
 	vector<float> input;
@@ -14,7 +17,7 @@ private:
 public:
 	vector<vector<vector<float>>> getTableOf(int index);
 
-	NeuralNetwork(int input,vector<int> innerNodes,int output);
+	NeuralNetwork(int input,vector<int> innerNodes,int output,bool constMembers);
 
 	void init(int numNetworks);
 	void clearInput();
@@ -23,5 +26,5 @@ public:
 	vector<float> getOutputOfMember(int index,vector<float> input);
 	vector<vector<float>> getAllOutputs();
 	vector<vector<float>> getAllOutputs(vector<float> input);
-	void nextGen(bool* toNext);
+	void nextGen(vector<bool> toNext);
 };
