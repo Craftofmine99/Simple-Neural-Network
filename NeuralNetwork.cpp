@@ -140,8 +140,10 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 		}
 
 	int current = 0;
+
 	float logNum = log(numGenerations + 2);
 	logNum = 1.0f / logNum;
+
 	if(constMembers)
 	{
 		for(int a = 0 ; a < members.size() ; a++)
