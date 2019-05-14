@@ -199,3 +199,27 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 	}
 	numGenerations++;
 }
+
+string NeuralNetwork::print()
+{
+	string toReturn = "[\n";
+	for(int a = 0 ; a < members.size() ; a++)
+	{
+		toReturn << "Member " << a << " : [\n";
+		for(int b = 0 ; b < members[a].size() ; b++)
+		{
+			toReturn += "[\n";
+			for(int c = 0 ; c < members[a][b].size() ; b++)
+			{
+				toReturn += "[\n";
+				for(int d = 0 ; d < members[a][b][c].size() ; b++)
+				{
+					toReturn += members[a][b][c][d] + ",";
+				}
+				toReturn += "],";
+			}
+			toReturn += "\n],\n";
+		}
+		toReturn += "],\n";
+	}
+}
