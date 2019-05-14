@@ -28,5 +28,5 @@ public:
 	vector<vector<float>> getAllOutputs(vector<float> input);
 	void nextGen(vector<bool> toNext);
 
-	string print();
+	string toString();
 };

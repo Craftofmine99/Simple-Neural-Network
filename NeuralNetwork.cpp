@@ -3,6 +3,7 @@
 #include <math.h>
 #include <random>
 #include <ctime>
+#include <string>
 
 float sigmoid(float x)
 {
@@ -200,26 +201,28 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 	numGenerations++;
 }
 
-string NeuralNetwork::print()
+string NeuralNetwork::toString()
 {
-	string toReturn = "[\n";
+	string toReturn = "{\n";
 	for(int a = 0 ; a < members.size() ; a++)
 	{
-		toReturn << "Member " << a << " : [\n";
+		toReturn += "Member " + to_string(a) + " : [\n";
 		for(int b = 0 ; b < members[a].size() ; b++)
 		{
-			toReturn += "[\n";
+			toReturn += "Layer " + to_string(b) + " : [\n";
 			for(int c = 0 ; c < members[a][b].size() ; b++)
 			{
-				toReturn += "[\n";
+				toReturn += "Node : " + to_string(c) + "[\n";
 				for(int d = 0 ; d < members[a][b][c].size() ; b++)
 				{
-					toReturn += members[a][b][c][d] + ",";
+					toReturn += to_string(members[a][b][c][d]) + ",";
 				}
-				toReturn += "],";
+				toReturn += "],\n";
 			}
-			toReturn += "\n],\n";
+			toReturn += "],\n";
 		}
 		toReturn += "],\n";
 	}
+	toReturn += "}";
+	return toReturn;
 }
