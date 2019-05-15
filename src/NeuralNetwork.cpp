@@ -5,34 +5,11 @@
 #include <string>
 #include <iostream>
 
-/**
- * Function to scale any number down
- * to between 0 and 1
- * 
- * Parameters:
- * x : any float
- * 
- * Returns:
- * 1 / (1 + e^(-x))
- */
 float sigmoid(float x)
 {
 	return (1.0f / (1.0f + exp(-x)));
 }
 
-/**
- * Returns the table (three deep float vector) of
- * the member of the index specified. If the index
- * is out of range, then it returns an empty vector.
- * 
- * Parameters:
- * index : integer greater than or equal to zero, and
- * 	less than the number of members.
- * 
- * Returns:
- * Three nested vector of floats which represent
- * the member specified by index.
- */
 vector<vector<vector<float>>> NeuralNetwork::getTableOf(int index)
 {
 	if (index < 0 || index > members.size())
@@ -54,12 +31,13 @@ NeuralNetwork::NeuralNetwork(int input, vector<int> innerNodes, int output, bool
 	random_device rd;
 	mt19937 e2(rd());
 	uniform_real_distribution<float> dist(0, 1);
+
+	members = vector<vector<vector<vector<float>>>>();
 }
 
 void NeuralNetwork::init(int numNetworks)
 {
-	cout << numLayers << endl;
-	members = vector<vector<vector<vector<float>>>>();
+	members.clear();
 	members.reserve(numNetworks);
 	for (int a = 0; a < numNetworks; a++)
 	{
@@ -79,10 +57,16 @@ void NeuralNetwork::init(int numNetworks)
 					else
 						members[a][b][c].reserve(numEachLayer[b - 1]);
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
-						if(dist(e2) < 0.5f)
+					{
+						float temp = dist(e2);
+						if(temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
-						else
+						else if (temp < 0.4f)
 							members[a][b][c].push_back(-dist(e2));
+						else
+							members[a][b][c].push_back(0.0f);
+						
+					}
 					members[a][b][c].shrink_to_fit();
 				}
 			}
@@ -97,10 +81,15 @@ void NeuralNetwork::init(int numNetworks)
 					else
 						members[a][b][c].reserve(numEachLayer[b - 1]);
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
-						if(dist(e2) < 0.5f)
+					{
+						float temp = dist(e2);
+						if(temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
-						else
+						else if (temp < 0.4f)
 							members[a][b][c].push_back(-dist(e2));
+						else
+							members[a][b][c].push_back(0.0f);
+					}
 					members[a][b][c].shrink_to_fit();
 				}
 			}
@@ -174,10 +163,10 @@ bool NeuralNetwork::setInput(vector<float> input)
 }
 
 // recommended to allow half or less to move on to the next generation
-void NeuralNetwork::nextGen(vector<bool> toNext)
+bool NeuralNetwork::nextGen(vector<bool> toNext)
 {
-	if (toNext.size() != members.size())
-		return;
+	if (members.empty() || toNext.size() != members.size())
+		return false;
 
 	int numToNext = 0;
 	vector<int> indexes = vector<int>();
@@ -221,11 +210,11 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 							float temp = dist(e2);
 							if (temp < 0.1f)
 							{
-								members[a][b][c][d] += dist(e2) * (genModifier);
+								members[a][b][c][d] += dist(e2) * genModifier;
 							}
 							else if (temp < 0.2f)
 							{
-								members[a][b][c][d] -= dist(e2) * (genModifier);
+								members[a][b][c][d] -= dist(e2) * genModifier;
 							}
 						}
 			}
@@ -241,13 +230,14 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 					{
 						float temp = dist(e2);
 						if (temp < 0.1f)
-							newMembers[a][b][c][d] += dist(e2) * (genModifier);
+							newMembers[a][b][c][d] += dist(e2) * genModifier;
 						else if (temp < 0.2f)
-							newMembers[a][b][c][d] -= dist(e2) * (genModifier);
+							newMembers[a][b][c][d] -= dist(e2) * genModifier;
 					}
 		members.insert(members.end(),newMembers.begin(),newMembers.end());
 	}
 	numGenerations++;
+	return true;
 }
 
 string NeuralNetwork::memberToString(int index)
@@ -258,17 +248,22 @@ string NeuralNetwork::memberToString(int index)
 	string toReturn = "Member " + to_string(index) + " : [\n";
 	for (int b = 0; b < members[index].size(); b++)
 	{
-		toReturn += "\t\tLayer " + to_string(b) + " : [\n";
+		toReturn += "\tLayer " + to_string(b) + " : [\n";
 		for (int c = 0; c < members[index][b].size(); c++)
 		{
-			toReturn += "\t\t\tNode " + to_string(c) + " : (";
+			toReturn += "\t\tNode " + to_string(c) + " : (";
 			for (int d = 0; d < members[index][b][c].size(); d++)
 			{
-				toReturn += to_string(members[index][b][c][d]) + ",";
+				toReturn += to_string(members[index][b][c][d]);
+				if(d != members[index][b][c].size()-1) toReturn += ",";
 			}
-			toReturn += "),\n";
+			toReturn += ")";
+			if(c != members[index][b].size()-1) toReturn += ",";
+			toReturn += "\n";
 		}
-		toReturn += "\t\t],\n";
+		toReturn += "\t]";
+		if(b != members[index].size()-1) toReturn += ",";
+		toReturn += "\n";
 	}
 	toReturn += "]";
 
@@ -280,11 +275,15 @@ string NeuralNetwork::toString()
 	string toReturn = "{\n";
 	for (int a = 0; a < members.size(); a++)
 	{
-		toReturn += memberToString(a) + ",\n";
+		toReturn += memberToString(a);
+		if(a != members.size()-1) toReturn += ",";
+		toReturn += "\n";
 	}
 	toReturn += "}";
 	return toReturn;
 }
+
+void NeuralNetwork::clearMembers() {this->members.clear();}
 
 int NeuralNetwork::getNumMembers() { return members.size(); }
 void NeuralNetwork::setConstantMembers(bool c) { this->constMembers = c; }
