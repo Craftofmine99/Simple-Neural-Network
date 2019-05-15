@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include "NeuralNetwork.h"
+#include "src/NeuralNetwork.h"
 
 using namespace std;
 /**
@@ -14,7 +14,7 @@ int main()
     innerNodes.emplace_back(5);
 
 
-    NeuralNetwork myNetwork = NeuralNetwork(6, innerNodes, 2, false);
+    NeuralNetwork myNetwork = NeuralNetwork(6, innerNodes, 2, true);
 
     myNetwork.init(20);
 

@@ -5,8 +5,8 @@ main: testing.o NeuralNetwork.o
 testing.o: testing.cpp
 	g++ -O3 -c testing.cpp
 
-NeuralNetwork.o: NeuralNetwork.cpp NeuralNetwork.h
-	g++ -O3 -c NeuralNetwork.cpp
+NeuralNetwork.o: src/NeuralNetwork.cpp src/NeuralNetwork.h
+	g++ -O3 -c src/NeuralNetwork.cpp
 
 clean:
 	rm *.o
