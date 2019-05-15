@@ -29,6 +29,7 @@ public:
 	void nextGen(vector<bool> toNext);
 
 	string toString();
+	string memberToString(int index);
 	int getNumMembers();
 	void setConstantMembers(bool c);
 };

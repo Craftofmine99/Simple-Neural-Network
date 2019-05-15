@@ -50,5 +50,5 @@ int main()
 
     myNetwork.nextGen(toNext);
 
-    cout << myNetwork.toString() << endl;
+    cout << myNetwork.memberToString(2) << endl;
 }

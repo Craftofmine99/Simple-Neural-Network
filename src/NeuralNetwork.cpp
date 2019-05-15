@@ -64,7 +64,7 @@ void NeuralNetwork::init(int numNetworks)
 	for (int a = 0; a < numNetworks; a++)
 	{
 		members.push_back(vector<vector<vector<float>>>());
-		//members[a].reserve(numLayers + 1);
+		members[a].reserve(numLayers + 1);
 		for (int b = 0; b < numLayers + 1; b++)
 		{
 			members[a].push_back(vector<vector<float>>());
@@ -83,6 +83,7 @@ void NeuralNetwork::init(int numNetworks)
 							members[a][b][c].push_back(dist(e2));
 						else
 							members[a][b][c].push_back(-dist(e2));
+					members[a][b][c].shrink_to_fit();
 				}
 			}
 			else
@@ -100,11 +101,14 @@ void NeuralNetwork::init(int numNetworks)
 							members[a][b][c].push_back(dist(e2));
 						else
 							members[a][b][c].push_back(-dist(e2));
-						
+					members[a][b][c].shrink_to_fit();
 				}
 			}
+			members[a][b].shrink_to_fit();
 		}
+		members[a].shrink_to_fit();
 	}
+	members.shrink_to_fit();
 }
 
 vector<float> NeuralNetwork::getOutputOfMember(int index, vector<float> input)
@@ -169,7 +173,7 @@ bool NeuralNetwork::setInput(vector<float> input)
 	return true;
 }
 
-// recommended to allow half or less to move on to next generation
+// recommended to allow half or less to move on to the next generation
 void NeuralNetwork::nextGen(vector<bool> toNext)
 {
 	if (toNext.size() != members.size())
@@ -181,10 +185,7 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 	for (int a = 0; a < members.size(); a++)
 		if (!toNext[a])
 			if (!constMembers)
-			{
-				//members.erase(members.begin() + a);
 				indexes.emplace_back(a);
-			}
 			else
 				members[a] = vector<vector<vector<float>>>();
 		else
@@ -199,7 +200,7 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 
 	int current = 0;
 
-	float genModifier = ((1.0f / exp(pow(numGenerations, 32))) + 0.01f);
+	float genModifier = ((1.0f / exp(numGenerations / 32.0f)) + 0.01f);
 
 	if (constMembers)
 	{
@@ -249,27 +250,37 @@ void NeuralNetwork::nextGen(vector<bool> toNext)
 	numGenerations++;
 }
 
+string NeuralNetwork::memberToString(int index)
+{
+	if(index < 0 || index >= members.size())
+		return "";
+
+	string toReturn = "Member " + to_string(index) + " : [\n";
+	for (int b = 0; b < members[index].size(); b++)
+	{
+		toReturn += "\t\tLayer " + to_string(b) + " : [\n";
+		for (int c = 0; c < members[index][b].size(); c++)
+		{
+			toReturn += "\t\t\tNode " + to_string(c) + " : (";
+			for (int d = 0; d < members[index][b][c].size(); d++)
+			{
+				toReturn += to_string(members[index][b][c][d]) + ",";
+			}
+			toReturn += "),\n";
+		}
+		toReturn += "\t\t],\n";
+	}
+	toReturn += "]";
+
+	return toReturn;
+}
+
 string NeuralNetwork::toString()
 {
 	string toReturn = "{\n";
 	for (int a = 0; a < members.size(); a++)
 	{
-		toReturn += "Member " + to_string(a) + " : [\n";
-		for (int b = 0; b < members[a].size(); b++)
-		{
-			toReturn += "\t\tLayer " + to_string(b) + " : [\n";
-			for (int c = 0; c < members[a][b].size(); c++)
-			{
-				toReturn += "\t\t\tNode " + to_string(c) + " : (";
-				for (int d = 0; d < members[a][b][c].size(); d++)
-				{
-					toReturn += to_string(members[a][b][c][d]) + ",";
-				}
-				toReturn += "),\n";
-			}
-			toReturn += "\t\t],\n";
-		}
-		toReturn += "],\n";
+		toReturn += memberToString(a) + ",\n";
 	}
 	toReturn += "}";
 	return toReturn;
