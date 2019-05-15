@@ -1,4 +1,4 @@
-#include <iostream>
+#include <random>
 #include <vector>
 
 using namespace std;
@@ -12,7 +12,7 @@ private:
 	bool constMembers;
 	vector<int> numEachLayer;
 	vector<vector<vector<vector<float>>>> members;
-	vector<float> input;
+	vector<float> myInput;
 
 public:
 	vector<vector<vector<float>>> getTableOf(int index);
