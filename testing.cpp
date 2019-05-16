@@ -1,6 +1,5 @@
-#include <vector>
+#include "src/NeuralNetwork.hpp"
 #include <iostream>
-#include "src/NeuralNetwork.h"
 
 using namespace std;
 /**
@@ -9,54 +8,58 @@ using namespace std;
 int main()
 {
     vector<int> innerNodes = vector<int>();
-    innerNodes.emplace_back(4);
-    innerNodes.emplace_back(4);
-    innerNodes.emplace_back(4);
+    innerNodes.emplace_back(128);
+    innerNodes.emplace_back(128);
+    innerNodes.emplace_back(128);
 
 
-    int numInput = 3;
-    int numOutput = 3;
-    int numMembers = 20;
+    int numInput = 768;
+    int numOutput = 1;
+    int numMembers = 64;
 
     NeuralNetwork myNetwork = NeuralNetwork(numInput, innerNodes, numOutput, true);
     myNetwork.init(numMembers);
 
-    cout << myNetwork.toString() << endl;
+    // cout << myNetwork.toString() << endl;
 
     vector<float> input = vector<float>(numInput,0.5f);
 
     myNetwork.setInput(input);
-    vector<vector<float>> output = myNetwork.getAllOutputs();
+    // vector<vector<float>> output = myNetwork.getAllOutputs();
 
-    cout << output.size() << endl;
+    // cout << output.size() << endl;
 
-    for(int i = 0 ; i < output.size(); i++)
-    {
-        cout << i << endl;
-        for(int a = 0 ; a < output[i].size() ; a++)
-            cout << output[i][a] << ", ";
-        cout << endl << "-------" << endl;
-    }
-    cout << "-------------------" << endl << "-------------------" << endl;
+    // for(int i = 0 ; i < output.size(); i++)
+    // {
+    //     cout << i << endl;
+    //     for(int a = 0 ; a < output[i].size() ; a++)
+    //         cout << output[i][a] << ", ";
+    //     cout << endl << "-------" << endl;
+    // }
+    // cout << "-------------------" << endl << "-------------------" << endl;
 
     vector<bool> toNext = vector<bool>();
 
-    toNext.push_back(true);
-    toNext.push_back(false);
-    toNext.push_back(true);
     for( ;toNext.size() < numMembers ; )
+    {
         toNext.push_back(false);
+        toNext.push_back(true);
+    }
 
     toNext.shrink_to_fit();
 
     cout << "Next Size : " << toNext.size() << endl;
 
-    // for(int i = 0 ; true ; i++)
-    // {
-    //     myNetwork.getAllOutputs();
-    //     myNetwork.nextGen(toNext);
-    //     cout << myNetwork.getNumMembers() << " - " << i << endl;
-    // }
-
-    cout << myNetwork.memberToString(2) << endl;
+    for(int i = 0 ; true ; i++)
+    {
+        for(int i = 0 ; i < numMembers ; i++)
+        {
+            for(int m = 0 ; m < 100000 ; m++)
+            {
+                myNetwork.getOutputOfMember(i);
+            }
+        }
+        myNetwork.nextGen(toNext);
+        cout << myNetwork.getNumMembers() << " - " << i << endl;
+    }
 }

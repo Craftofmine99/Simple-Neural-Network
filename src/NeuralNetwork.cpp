@@ -1,9 +1,8 @@
-#include "NeuralNetwork.h"
+#include "NeuralNetwork.hpp"
 #include <array>
 #include <math.h>
 #include <ctime>
 #include <string>
-#include <iostream>
 
 float sigmoid(float x)
 {
