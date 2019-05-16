@@ -59,13 +59,12 @@ void NeuralNetwork::init(int numNetworks)
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
 					{
 						float temp = dist(e2);
-						if(temp < 0.2f)
+						if (temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
 						else if (temp < 0.4f)
 							members[a][b][c].push_back(-dist(e2));
 						else
 							members[a][b][c].push_back(0.0f);
-						
 					}
 					members[a][b][c].shrink_to_fit();
 				}
@@ -83,7 +82,7 @@ void NeuralNetwork::init(int numNetworks)
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
 					{
 						float temp = dist(e2);
-						if(temp < 0.2f)
+						if (temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
 						else if (temp < 0.4f)
 							members[a][b][c].push_back(-dist(e2));
@@ -162,13 +161,11 @@ bool NeuralNetwork::setInput(vector<float> input)
 	return true;
 }
 
-// recommended to allow half or less to move on to the next generation
 bool NeuralNetwork::nextGen(vector<bool> toNext)
 {
 	if (members.empty() || toNext.size() != members.size())
 		return false;
 
-	int numToNext = 0;
 	vector<int> indexes = vector<int>();
 	indexes.reserve(members.size() / 2);
 	for (int a = 0; a < members.size(); a++)
@@ -177,20 +174,15 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 				indexes.emplace_back(a);
 			else
 				members[a] = vector<vector<vector<float>>>();
-		else
-		{
-			numToNext++;
-			if(constMembers)
-				indexes.emplace(indexes.begin(),a);
-		}
-	if(!constMembers)
-		for(int i = 0 ; i < indexes.size() ; i++)
+		else if (constMembers)
+			indexes.emplace(indexes.begin(), a);
+
+	if (!constMembers)
+		for (int i = 0; i < indexes.size(); i++)
 			members.erase(members.begin() + indexes[i]);
 
 	int current = 0;
-
 	float genModifier = ((1.0f / exp(numGenerations / 32.0f)) + 0.01f);
-
 	if (constMembers)
 	{
 		for (int a = 0; a < members.size(); a++)
@@ -234,7 +226,7 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 						else if (temp < 0.2f)
 							newMembers[a][b][c][d] -= dist(e2) * genModifier;
 					}
-		members.insert(members.end(),newMembers.begin(),newMembers.end());
+		members.insert(members.end(), newMembers.begin(), newMembers.end());
 	}
 	numGenerations++;
 	return true;
@@ -242,7 +234,7 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 
 string NeuralNetwork::memberToString(int index)
 {
-	if(index < 0 || index >= members.size())
+	if (index < 0 || index >= members.size())
 		return "";
 
 	string toReturn = "Member " + to_string(index) + " : [\n";
@@ -255,14 +247,17 @@ string NeuralNetwork::memberToString(int index)
 			for (int d = 0; d < members[index][b][c].size(); d++)
 			{
 				toReturn += to_string(members[index][b][c][d]);
-				if(d != members[index][b][c].size()-1) toReturn += ",";
+				if (d != members[index][b][c].size() - 1)
+					toReturn += ",";
 			}
 			toReturn += ")";
-			if(c != members[index][b].size()-1) toReturn += ",";
+			if (c != members[index][b].size() - 1)
+				toReturn += ",";
 			toReturn += "\n";
 		}
 		toReturn += "\t]";
-		if(b != members[index].size()-1) toReturn += ",";
+		if (b != members[index].size() - 1)
+			toReturn += ",";
 		toReturn += "\n";
 	}
 	toReturn += "]";
@@ -276,14 +271,15 @@ string NeuralNetwork::toString()
 	for (int a = 0; a < members.size(); a++)
 	{
 		toReturn += memberToString(a);
-		if(a != members.size()-1) toReturn += ",";
+		if (a != members.size() - 1)
+			toReturn += ",";
 		toReturn += "\n";
 	}
 	toReturn += "}";
 	return toReturn;
 }
 
-void NeuralNetwork::clearMembers() {this->members.clear();}
+void NeuralNetwork::clearMembers() { this->members.clear(); }
 
 int NeuralNetwork::getNumMembers() { return members.size(); }
 void NeuralNetwork::setConstantMembers(bool c) { this->constMembers = c; }
