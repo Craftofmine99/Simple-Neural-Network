@@ -4,15 +4,15 @@
 #include <ctime>
 #include <string>
 
-float sigmoid(float x)
+double sigmoid(double x)
 {
 	return (1.0f / (1.0f + exp(-x)));
 }
 
-vector<vector<vector<float>>> NeuralNetwork::getTableOf(int index)
+vector<vector<vector<double>>> NeuralNetwork::getTableOf(int index)
 {
 	if (index < 0 || index > members.size())
-		return vector<vector<vector<float>>>();
+		return vector<vector<vector<double>>>();
 	else
 		return members[index];
 }
@@ -24,14 +24,14 @@ NeuralNetwork::NeuralNetwork(int input, vector<int> innerNodes, int output, bool
 	numEachLayer = vector<int>(innerNodes);
 	numGenerations = 0;
 	this->numLayers = innerNodes.size();
-	this->myInput = vector<float>();
+	this->myInput = vector<double>();
 	this->constMembers = constMembers;
 
 	random_device rd;
 	mt19937 e2(rd());
-	uniform_real_distribution<float> dist(0, 1);
+	uniform_real_distribution<double> dist(0, 1);
 
-	members = vector<vector<vector<vector<float>>>>();
+	members = vector<vector<vector<vector<double>>>>();
 }
 
 void NeuralNetwork::init(int numNetworks)
@@ -40,24 +40,24 @@ void NeuralNetwork::init(int numNetworks)
 	members.reserve(numNetworks);
 	for (int a = 0; a < numNetworks; a++)
 	{
-		members.push_back(vector<vector<vector<float>>>());
+		members.push_back(vector<vector<vector<double>>>());
 		members[a].reserve(numLayers + 1);
 		for (int b = 0; b < numLayers + 1; b++)
 		{
-			members[a].push_back(vector<vector<float>>());
+			members[a].push_back(vector<vector<double>>());
 			if (b < numLayers)
 			{
 				members[a][b].reserve(numEachLayer[b]);
 				for (int c = 0; c < numEachLayer[b]; c++)
 				{
-					members[a][b].push_back(vector<float>());
+					members[a][b].push_back(vector<double>());
 					if (b == 0)
 						members[a][b][c].reserve(numInput);
 					else
 						members[a][b][c].reserve(numEachLayer[b - 1]);
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
 					{
-						float temp = dist(e2);
+						double temp = dist(e2);
 						if (temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
 						else if (temp < 0.4f)
@@ -73,14 +73,14 @@ void NeuralNetwork::init(int numNetworks)
 				members[a][b].reserve(numOutput);
 				for (int c = 0; c < numOutput; c++)
 				{
-					members[a][b].push_back(vector<float>());
+					members[a][b].push_back(vector<double>());
 					if (b == 0)
 						members[a][b][c].reserve(numInput);
 					else
 						members[a][b][c].reserve(numEachLayer[b - 1]);
 					for (int d = 0; d < members[a][b][c].capacity(); d++)
 					{
-						float temp = dist(e2);
+						double temp = dist(e2);
 						if (temp < 0.2f)
 							members[a][b][c].push_back(dist(e2));
 						else if (temp < 0.4f)
@@ -98,22 +98,22 @@ void NeuralNetwork::init(int numNetworks)
 	members.shrink_to_fit();
 }
 
-vector<float> NeuralNetwork::getOutputOfMember(int index, vector<float> input)
+vector<double> NeuralNetwork::getOutputOfMember(int index, vector<double> input)
 {
 	if (input.size() != numInput || index < 0 || index >= members.size())
-		return vector<float>();
+		return vector<double>();
 
-	vector<vector<vector<float>>> weights = members[index];
-	vector<float> previous = input;
-	vector<float> result;
+	vector<vector<vector<double>>> weights = members[index];
+	vector<double> previous = input;
+	vector<double> result;
 
 	for (int a = 0; a < weights.size(); a++)
 	{
-		result = vector<float>();
+		result = vector<double>();
 		result.reserve(weights[a].size());
 		for (int b = 0; b < weights[a].size(); b++)
 		{
-			float temp = 0.0f;
+			double temp = 0.0f;
 			for (int c = 0; c < weights[a][b].size(); c++)
 				temp += previous[c] * weights[a][b][c];
 			result.emplace_back(sigmoid(temp));
@@ -123,17 +123,17 @@ vector<float> NeuralNetwork::getOutputOfMember(int index, vector<float> input)
 	return result;
 }
 
-vector<float> NeuralNetwork::getOutputOfMember(int index)
+vector<double> NeuralNetwork::getOutputOfMember(int index)
 {
 	return this->getOutputOfMember(index, this->myInput);
 }
 
-vector<vector<float>> NeuralNetwork::getAllOutputs(vector<float> input)
+vector<vector<double>> NeuralNetwork::getAllOutputs(vector<double> input)
 {
 	if (input.size() != numInput)
-		return vector<vector<float>>();
+		return vector<vector<double>>();
 
-	vector<vector<float>> toReturn = vector<vector<float>>();
+	vector<vector<double>> toReturn = vector<vector<double>>();
 	toReturn.reserve(members.size());
 
 	for (int i = 0; i < members.size(); i++)
@@ -142,7 +142,7 @@ vector<vector<float>> NeuralNetwork::getAllOutputs(vector<float> input)
 	return toReturn;
 }
 
-vector<vector<float>> NeuralNetwork::getAllOutputs()
+vector<vector<double>> NeuralNetwork::getAllOutputs()
 {
 	return this->getAllOutputs(this->myInput);
 }
@@ -152,7 +152,7 @@ void NeuralNetwork::clearInput()
 	this->myInput.clear();
 }
 
-bool NeuralNetwork::setInput(vector<float> input)
+bool NeuralNetwork::setInput(vector<double> input)
 {
 	if (input.size() != numInput)
 		return false;
@@ -172,7 +172,7 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 			if (!constMembers)
 				indexes.emplace_back(a);
 			else
-				members[a] = vector<vector<vector<float>>>();
+				members[a] = vector<vector<vector<double>>>();
 		else if (constMembers)
 			indexes.emplace(indexes.begin(), a);
 
@@ -181,7 +181,7 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 			members.erase(members.begin() + indexes[i]);
 
 	int current = 0;
-	float genModifier = ((1.0f / exp(numGenerations / 32.0f)) + 0.01f);
+	double genModifier = ((1.0f / exp(numGenerations / 32.0f)) + 0.01f);
 	if (constMembers)
 	{
 		for (int a = 0; a < members.size(); a++)
@@ -198,7 +198,7 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 					for (int c = 0; c < members[a][b].size(); c++)
 						for (int d = 0; d < members[a][b][c].size(); d++)
 						{
-							float temp = dist(e2);
+							double temp = dist(e2);
 							if (temp < 0.1f)
 							{
 								members[a][b][c][d] += dist(e2) * genModifier;
@@ -213,13 +213,13 @@ bool NeuralNetwork::nextGen(vector<bool> toNext)
 	}
 	else
 	{
-		vector<vector<vector<vector<float>>>> newMembers = vector<vector<vector<vector<float>>>>(members);
+		vector<vector<vector<vector<double>>>> newMembers = vector<vector<vector<vector<double>>>>(members);
 		for (int a = 0; a < newMembers.size(); a++)
 			for (int b = 0; b < newMembers[a].size(); b++)
 				for (int c = 0; c < newMembers[a][b].size(); c++)
 					for (int d = 0; d < newMembers[a][b][c].size(); d++)
 					{
-						float temp = dist(e2);
+						double temp = dist(e2);
 						if (temp < 0.1f)
 							newMembers[a][b][c][d] += dist(e2) * genModifier;
 						else if (temp < 0.2f)

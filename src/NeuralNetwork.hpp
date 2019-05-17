@@ -6,19 +6,19 @@ using namespace std;
 class NeuralNetwork
 {
 private:
-// These two values are for generating the random values
+	// These two values are for generating the random values
 	mt19937 e2;
-	uniform_real_distribution<float> dist;
+	uniform_real_distribution<double> dist;
 
 	int numInput, numOutput, numLayers, numGenerations;
 	bool constMembers;
 	vector<int> numEachLayer;
-	vector<vector<vector<vector<float>>>> members;
-	vector<float> myInput;
+	vector<vector<vector<vector<double>>>> members;
+	vector<double> myInput;
 
 public:
-/**
- * Returns the table (three deep float vector) of
+	/**
+ * Returns the table (three deep double vector) of
  * the member of the index specified. If the index
  * is out of range, then it returns an empty vector.
  * 
@@ -26,12 +26,12 @@ public:
  * 	index : integer greater than or equal to zero, and
  * 		less than the number of members.
  * 
- * Returns: Three nested vector of floats which represent
+ * Returns: Three nested vector of doubles which represent
  * 	the member specified by index.
  */
-	vector<vector<vector<float>>> getTableOf(int index);
+	vector<vector<vector<double>>> getTableOf(int index);
 
-/**
+	/**
  * The only constructor.
  * Mandates a constant network structure (that means the
  * same number of inputs, outputs, layers, and inner nodes
@@ -48,7 +48,7 @@ public:
  */
 	NeuralNetwork(int input, vector<int> innerNodes, int output, bool constMembers);
 
-/**
+	/**
  * Must be called before using any other methods.
  * Initializes the number of members.
  * Can also be used to completely reset the current members
@@ -61,7 +61,7 @@ public:
  */
 	void init(int numNetworks);
 
-/**
+	/**
  * Erases all current members.
  * 
  * Parameters: null
@@ -69,7 +69,7 @@ public:
  */
 	void clearMembers();
 
-/**
+	/**
  * Erases the set input if it has been set.
  * 
  * Parameters: null
@@ -77,73 +77,75 @@ public:
  */
 	void clearInput();
 
-/**
+	/**
  * Sets an input vector to be used in finding the output
  * values of members.
  * 
  * Parameters:
- * 	input : float vector. input.size() should equal this->numInput,
+ * 	input : double vector. input.size() should equal this->numInput,
  * 		and each value should be between zero and one.
  * 
  * Returns: true if the vector is valid, false otherwise.
  */
-	bool setInput(vector<float> input);
+	bool setInput(vector<double> input);
 
-/**
+	/**
  * 
  * Calculates the output of a single member with the input
- * given by setInput(vector<float> input).
+ * given by setInput(vector<double> input).
  * 
  * Parameters:
  * 	index : index of the member to get the output for.
  * 
- * Returns : vector of floats representing the output of the
+ * Returns : vector of doubles representing the output of the
  * 	specified member and input if setInput() had been called
  * 	before successfully, otherwise returns an empty vector.
  */
-	vector<float> getOutputOfMember(int index);
+	vector<double> getOutputOfMember(int index);
 
-/**
+	/**
  * Calculates the output of a single member with the input given.
  * 
  * Parameters:
  * 	index : index of the member to get the output for.
- * 	input : float vector prepresenting the input values to
+ * 	input : double vector prepresenting the input values to
  * 		use to calculate the output.
  * 
- * Returns: the output of the calculation as a float vector, or
+ * Returns: the output of the calculation as a double vector, or
  * 	an empty vector if the index or input vector are invalid.
  */
-	vector<float> getOutputOfMember(int index, vector<float> input);
+	vector<double> getOutputOfMember(int index, vector<double> input);
 
-/**
+	/**
  * Calculates the outputs for all members with the input
- * specified by setInput(vector<float> input).
+ * specified by setInput(vector<double> input).
  * 
  * Parameters: null
- * Returns: a vector of vectors of floats representing the
+ * Returns: a vector of vectors of doubles representing the
  * 	outputs of all the members.
  */
-	vector<vector<float>> getAllOutputs();
+	vector<vector<double>> getAllOutputs();
 
-/**
+	/**
  * Calculates the outputs for all members with the input
  * specified by input.
  * 
  * Parameters:
- * 	input: a vector of floats containing the input with which
+ * 	input: a vector of doubles containing the input with which
  * 		the outputs of each member will be calculated.
  * 
- * Returns: a vector of vectors of floats representing the
+ * Returns: a vector of vectors of doubles representing the
  * 	outputs of all the members.
  */
-	vector<vector<float>> getAllOutputs(vector<float> input);
+	vector<vector<double>> getAllOutputs(vector<double> input);
 
-/**
+	/**
  * Discards specified members and then copies the remaining
  * members to be altered slightly. This is the bread and butter
  * of ML. After a lot of "generations" at least one of the
- * members should be good.
+ * members should be good. It is recommended to allow less than
+ * half of the members to move to the next generation. The less
+ * the better.
  * 
  * Parameters:
  * 	toNext : a vector of boolean values. The size should be the same
@@ -154,7 +156,7 @@ public:
  */
 	bool nextGen(vector<bool> toNext);
 
-/**
+	/**
  * Returns a representation of all the current members.
  * 
  * Parameters: null
@@ -162,7 +164,7 @@ public:
  */
 	string toString();
 
-/**
+	/**
  * Returns a representation of the specified member if possible.
  * 
  * Parameters:
@@ -174,12 +176,12 @@ public:
  */
 	string memberToString(int index);
 
-/**
+	/**
  * Returns: the current number of members.
  */
 	int getNumMembers();
 
-/**
+	/**
  * Sets whether or not the nextGen() is allowed to change
  * the number of members.
  * 
