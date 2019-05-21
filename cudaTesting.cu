@@ -61,7 +61,7 @@ void forCuda(double *members, int *layerSizes, double* answers, double *input, i
             for(int c = 0 ; c < layerSizes[b] ; c++)
                 previous[c] = result[c];
         }
-        for(int i = 0 ; i < numOutput ; i++)
+        for(int i = 0 ; i < layerSizes[otherSize-1] ; i++)
             answers[a + i] = result[i];
     }
     delete [] previous;
@@ -71,6 +71,8 @@ void forCuda(double *members, int *layerSizes, double* answers, double *input, i
 int main()
 {
     vector<int> innerNodes = vector<int>();
+    innerNodes.emplace_back(64);
+    innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);

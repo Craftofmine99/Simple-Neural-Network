@@ -367,7 +367,7 @@ bool Board::movePawn(Square* thisPawn, Square* thatSpace) {
 	//off board inputs should be handled elsewhere (before this)
 	//squares with same color should be handled elsewhere (before this)
 	using namespace std;
-	bool invalid = false;
+	// bool invalid = false;
 	int pawnX = thisPawn->getX();
 	int pawnY = thisPawn->getY();
 	int thatX = thatSpace->getX();
@@ -383,15 +383,20 @@ bool Board::movePawn(Square* thisPawn, Square* thatSpace) {
 			thisPawn->setEmpty();
 			return true;
 		}
+		else if ((pawnX + 1 == thatX || pawnX - 1 == thatX) && pawnY + 1 == thatY && thatSpace->getColor() == BLACK)
+		{
+			thatSpace->setSpace(thisPawn);
+			thisPawn->setEmpty();
+			return true;
+		}
+		else if(pawnY == 1 && thatY == 3 && pawnX == thatX && thatSpace->getColor() == NONE)
+		{
+			thatSpace->setSpace(thisPawn);
+			thisPawn->setEmpty();
+			return true;
+		}
 		else
-			if ((pawnX + 1 == thatX || pawnX - 1 == thatX) && pawnY + 1 == thatY  && thatSpace->getColor() == BLACK)
-			{
-				thatSpace->setSpace(thisPawn);
-				thisPawn->setEmpty();
-				return true;
-			}
-			else
-				return false;
+			return false;
 	}
 	else
 		if (thisPawn->getColor() == BLACK)
@@ -402,15 +407,20 @@ bool Board::movePawn(Square* thisPawn, Square* thatSpace) {
 				thisPawn->setEmpty();
 				return true;
 			}
+			else if ((pawnX + 1 == thatX || pawnX - 1 == thatX) && pawnY - 1 == thatY && thatSpace->getColor() == WHITE)
+			{
+				thatSpace->setSpace(thisPawn);
+				thisPawn->setEmpty();
+				return true;
+			}
+			else if(pawnY == 6 && thatY == 4 && pawnX == thatX && thatSpace->getColor() == NONE)
+			{
+				thatSpace->setSpace(thisPawn);
+				thisPawn->setEmpty();
+				return true;
+			}
 			else
-				if ((pawnX + 1 == thatX || pawnX - 1 == thatX) && pawnY - 1 == thatY  && thatSpace->getColor() == WHITE)
-				{
-					thatSpace->setSpace(thisPawn);
-					thisPawn->setEmpty();
-					return true;
-				}
-				else
-					return false;
+				return false;
 		}
 		else
 			return false;
