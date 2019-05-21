@@ -1,21 +1,19 @@
 #include <random>
 #include <vector>
 
-using namespace std;
-
 class NeuralNetwork
 {
 private:
 	int numInput, numOutput, numLayers, numGenerations;
 	bool constMembers;
-	vector<int> numEachLayer;
-	vector<vector<vector<vector<double>>>> members;
-	vector<double> myInput;
+	std::vector<int> numEachLayer;
+	std::vector<std::vector<std::vector<std::vector<double>>>> members;
+	std::vector<double> myInput;
 
 public:
 	// These two values are for generating the random values
-	mt19937 e2;
-	uniform_real_distribution<double> dist;
+	std::mt19937 e2;
+	std::uniform_real_distribution<double> dist;
 	/**
  * Returns the table (three deep double vector) of
  * the member of the index specified. If the index
@@ -28,7 +26,7 @@ public:
  * Returns: Three nested vector of doubles which represent
  * 	the member specified by index.
  */
-	vector<vector<vector<double>>> getTableOf(int index);
+	std::vector<std::vector<std::vector<double>>> getTableOf(int index);
 
 	/**
  * The only constructor.
@@ -45,7 +43,7 @@ public:
  * 	constMembers : whether or not the amount of members should
  * 		stay constant from one generation to the next
  */
-	NeuralNetwork(int input, vector<int> innerNodes, int output, bool constMembers);
+	NeuralNetwork(int input, std::vector<int> innerNodes, int output, bool constMembers);
 
 	/**
  * Must be called before using any other methods.
@@ -86,7 +84,7 @@ public:
  * 
  * Returns: true if the vector is valid, false otherwise.
  */
-	bool setInput(vector<double> input);
+	bool setInput(std::vector<double> input);
 
 	/**
  * 
@@ -100,7 +98,7 @@ public:
  * 	specified member and input if setInput() had been called
  * 	before successfully, otherwise returns an empty vector.
  */
-	vector<double> getOutputOfMember(int index);
+	std::vector<double> getOutputOfMember(int index);
 
 	/**
  * Calculates the output of a single member with the input given.
@@ -113,7 +111,7 @@ public:
  * Returns: the output of the calculation as a double vector, or
  * 	an empty vector if the index or input vector are invalid.
  */
-	vector<double> getOutputOfMember(int index, vector<double> input);
+	std::vector<double> getOutputOfMember(int index, std::vector<double> input);
 
 	/**
  * Calculates the outputs for all members with the input
@@ -123,7 +121,7 @@ public:
  * Returns: a vector of vectors of doubles representing the
  * 	outputs of all the members.
  */
-	vector<vector<double>> getAllOutputs();
+	std::vector<std::vector<double>> getAllOutputs();
 
 	/**
  * Calculates the outputs for all members with the input
@@ -136,7 +134,7 @@ public:
  * Returns: a vector of vectors of doubles representing the
  * 	outputs of all the members.
  */
-	vector<vector<double>> getAllOutputs(vector<double> input);
+	std::vector<std::vector<double>> getAllOutputs(std::vector<double> input);
 
 	/**
  * Discards specified members and then copies the remaining
@@ -153,7 +151,7 @@ public:
  * Returns: true if it successfully moves on to the next Generation,
  * 	and false if the input is invalid or there are no members.
  */
-	bool nextGen(vector<bool> toNext);
+	bool nextGen(std::vector<bool> toNext);
 
 	/**
  * Returns a representation of all the current members.
@@ -161,7 +159,7 @@ public:
  * Parameters: null
  * Returns: a representation of all the current members.
  */
-	string toString();
+	std::string toString();
 
 	/**
  * Returns a representation of the specified member if possible.
@@ -173,7 +171,7 @@ public:
  * Returns: a representation of the specified member if possible,
  * 	otherwise returns an empty string.
  */
-	string memberToString(int index);
+	std::string memberToString(int index);
 
 	/**
  * Returns: the current number of members.

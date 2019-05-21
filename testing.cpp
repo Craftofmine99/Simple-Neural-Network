@@ -1,14 +1,12 @@
 #include "src/NeuralNetwork.hpp"
 #include <iostream>
 #include <ctime>
-
-using namespace std;
 /**
  * For testing the NeuralNetwork
  */
 int main()
 {
-    vector<int> innerNodes = vector<int>();
+    std::vector<int> innerNodes = std::vector<int>();
     innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);
@@ -25,7 +23,7 @@ int main()
 
     // cout << myNetwork.toString() << endl;
 
-    vector<double> input = vector<double>(numInput, 0.5f);
+    std::vector<double> input = std::vector<double>(numInput, 0.5f);
 
     myNetwork.setInput(input);
     // vector<vector<double>> output = myNetwork.getAllOutputs();
@@ -41,7 +39,7 @@ int main()
     // }
     // cout << "-------------------" << endl << "-------------------" << endl;
 
-    vector<bool> toNext = vector<bool>();
+    std::vector<bool> toNext = std::vector<bool>();
 
     for (; toNext.size() < numMembers;)
     {
@@ -53,12 +51,12 @@ int main()
 
     toNext.shrink_to_fit();
 
-    cout << "Members : " << numMembers << endl;
+    std::cout << "Members : " << numMembers << std::endl;
 
     int avgMoves = 40;
     int numMovesChecked = 100;
 
-    cout << "Moves per \"game\" : " << avgMoves*numMovesChecked << endl;
+    std::cout << "Moves per \"game\" : " << avgMoves*numMovesChecked << std::endl;
     for (int i = 0; i < 16 ; i++)
     {
         clock_t begin_time = clock();
@@ -74,7 +72,7 @@ int main()
             int hours = floor((timeDiff / CLOCKS_PER_SEC) / 3600.0f);
             int minuets = floor((timeDiff / CLOCKS_PER_SEC - hours * 60) / 60.0f);
             int seconds = timeDiff / CLOCKS_PER_SEC - hours * 60.0f - minuets * 60.0f;
-            cout << (i + 1) << "\t" << hours << " : " << minuets << " : " << seconds << endl;
+            std::cout << (i + 1) << "\t" << hours << " : " << minuets << " : " << seconds << std::endl;
         }
         else
             break;

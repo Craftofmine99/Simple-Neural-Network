@@ -4,6 +4,8 @@
 #include <ctime>
 #include <string>
 
+using namespace std;
+
 double sigmoid(double x)
 {
 	return (1.0f / (1.0f + exp(-x)));
