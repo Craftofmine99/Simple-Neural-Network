@@ -9,12 +9,16 @@ using namespace std;
 int main()
 {
     vector<int> innerNodes = vector<int>();
-    innerNodes.emplace_back(1536);
+    innerNodes.emplace_back(64);
+    innerNodes.emplace_back(64);
+    innerNodes.emplace_back(64);
+    innerNodes.emplace_back(64);
+    innerNodes.emplace_back(64);
     innerNodes.emplace_back(64);
 
     int numInput = 768;
     int numOutput = 1;
-    int numMembers = 64;
+    int numMembers = 512;
 
     NeuralNetwork myNetwork = NeuralNetwork(numInput, innerNodes, numOutput, true);
     myNetwork.init(numMembers);
@@ -43,15 +47,19 @@ int main()
     {
         toNext.push_back(false);
         toNext.push_back(true);
+        toNext.push_back(false);
+        toNext.push_back(false);
     }
 
     toNext.shrink_to_fit();
 
-    cout << "Next Size : " << toNext.size() << endl;
+    cout << "Members : " << numMembers << endl;
 
     int avgMoves = 40;
-    int numMovesChecked = 10000;
-    for (int i = 0; true; i++)
+    int numMovesChecked = 100;
+
+    cout << "Moves per \"game\" : " << avgMoves*numMovesChecked << endl;
+    for (int i = 0; i < 16 ; i++)
     {
         clock_t begin_time = clock();
         for (int i = 0; i < numMembers; i++)
@@ -61,9 +69,11 @@ int main()
 
         if (myNetwork.nextGen(toNext))
         {
-            int hours = floor((float(clock() - begin_time) / CLOCKS_PER_SEC) / 3600.0f);
-            int minuets = floor((float(clock() - begin_time) / CLOCKS_PER_SEC - hours * 60) / 60.0f);
-            int seconds = float(clock() - begin_time) / CLOCKS_PER_SEC - hours * 60.0f - minuets * 60.0f;
+            clock_t end_time = clock();
+            float timeDiff = clock() - begin_time;
+            int hours = floor((timeDiff / CLOCKS_PER_SEC) / 3600.0f);
+            int minuets = floor((timeDiff / CLOCKS_PER_SEC - hours * 60) / 60.0f);
+            int seconds = timeDiff / CLOCKS_PER_SEC - hours * 60.0f - minuets * 60.0f;
             cout << (i + 1) << "\t" << hours << " : " << minuets << " : " << seconds << endl;
         }
         else

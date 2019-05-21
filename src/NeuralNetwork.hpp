@@ -6,10 +6,6 @@ using namespace std;
 class NeuralNetwork
 {
 private:
-	// These two values are for generating the random values
-	mt19937 e2;
-	uniform_real_distribution<double> dist;
-
 	int numInput, numOutput, numLayers, numGenerations;
 	bool constMembers;
 	vector<int> numEachLayer;
@@ -17,6 +13,9 @@ private:
 	vector<double> myInput;
 
 public:
+	// These two values are for generating the random values
+	mt19937 e2;
+	uniform_real_distribution<double> dist;
 	/**
  * Returns the table (three deep double vector) of
  * the member of the index specified. If the index
