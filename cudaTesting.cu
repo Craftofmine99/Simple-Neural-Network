@@ -1,4 +1,4 @@
-#include "src/NeuralNetwork.hpp"
+#include "src/neuralNetwork/NeuralNetwork.hpp"
 #include <iostream>
 #include <ctime>
 #include <cuda_runtime.h>
@@ -71,18 +71,13 @@ void forCuda(double *members, int *layerSizes, double* answers, double *input, i
 int main()
 {
     vector<int> innerNodes = vector<int>();
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
-    innerNodes.emplace_back(64);
+    // innerNodes.emplace_back(1536);
+    // innerNodes.emplace_back(768);
+    innerNodes.emplace_back(384);
 
     int numInput = 768;
     int numOutput = 1;
-    int numMembers = 512;
+    int numMembers = 256;
 
     NeuralNetwork myNetwork = NeuralNetwork(numInput, innerNodes, numOutput, true);
     myNetwork.init(numMembers);
@@ -131,6 +126,7 @@ int main()
         toNext.push_back(false);
     }
 
+    if(toNext.size() > numMembers) toNext.resize(numMembers);
     toNext.shrink_to_fit();
 
     cout << "Members : " << numMembers << endl;
@@ -138,7 +134,7 @@ int main()
     int avgMoves = 40;
     int numMovesChecked = 100;
 
-    cout << "Moves per \"game\" : " << avgMoves*numMovesChecked << endl;
+    cout << "Moves checked per \"game\" : " << avgMoves*numMovesChecked << endl;
     for (int i = 0; i < 16; i++)
     {
         clock_t begin_time = clock();
@@ -181,13 +177,19 @@ int main()
 
         if (myNetwork.nextGen(toNext))
         {
-
             clock_t end_time = clock();
-            int hours = floor((float(end_time - begin_time) / CLOCKS_PER_SEC) / 3600.0f);
-            int minuets = floor((float(end_time - begin_time) / CLOCKS_PER_SEC - hours * 60) / 60.0f);
-            int seconds = float(end_time - begin_time) / CLOCKS_PER_SEC - hours * 60.0f - minuets * 60.0f;
-            cout << (i + 1) << "\t" << hours << " : " << minuets << " : " << seconds << endl;
-            cout << "---------------" << endl;
+            float timeDiff = clock() - begin_time;
+            int hours = floor((timeDiff / CLOCKS_PER_SEC) / 3600.0f);
+            int minuets = floor((timeDiff / CLOCKS_PER_SEC - hours * 3600) / 60.0f);
+            int seconds = (timeDiff / CLOCKS_PER_SEC) - hours * 3600.0f - minuets * 60.0f;
+            cout << (i + 1) << "\t";
+            if (hours < 10) cout << "0";
+            cout << hours << ":";
+            if(minuets < 10) cout << "0";
+            cout << minuets << ":";
+            if(seconds < 10) cout << "0";
+            cout << seconds << endl;
+            cout << "-----------------" << endl;
         }
         else
             break;

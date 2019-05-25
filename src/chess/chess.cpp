@@ -62,7 +62,7 @@ void Board::printBoard() {
 				break;
 			case PAWN: (c == WHITE) ? cout << " P " : cout << " p ";
 				break;
-			case EMPTY: cout << " " << "\21" << " ";
+			case EMPTY: cout << " " << "_" << " ";
 				break;
 			default: cout << "XXX";
 				break;
