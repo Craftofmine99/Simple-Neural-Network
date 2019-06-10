@@ -6,6 +6,7 @@
 
 enum Piece { KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN, EMPTY };
 enum Color { WHITE, BLACK, NONE };
+enum Move { INVALID, VALID, GAMEOVER };
 
 class Square
 {
@@ -48,6 +49,8 @@ public:
 	bool doMove();
 	
 	void setBoard();
+	void setBoard(Square[8][8] &sq);
 	bool playGame();
+	Square* getBoard();
 };
 

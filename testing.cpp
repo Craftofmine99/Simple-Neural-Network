@@ -1,4 +1,5 @@
 #include "src/neuralNetwork/NeuralNetwork.hpp"
+// #include "src/chess/chess.h"
 #include <iostream>
 #include <ctime>
 
@@ -9,13 +10,13 @@ using namespace std;
 int main()
 {
     vector<int> innerNodes = vector<int>();
-    innerNodes.emplace_back(1536);
-    innerNodes.emplace_back(768);
+    // innerNodes.emplace_back(1536);
+    // innerNodes.emplace_back(768);
     innerNodes.emplace_back(384);
 
     int numInput = 768;
     int numOutput = 1;
-    int numMembers = 256;
+    int numMembers = 64;
 
     NeuralNetwork myNetwork = NeuralNetwork(numInput, innerNodes, numOutput, true);
     myNetwork.init(numMembers);

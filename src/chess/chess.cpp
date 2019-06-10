@@ -36,6 +36,14 @@ void Square::setPieceAndColor(Piece p, Color c)
 
 }
 
+void Board::setBoard(Square[8][8] &sq)
+{
+	for(int a = 0 ; a != 8 ; ++a)
+		for(int b = 0 ; b != 8 ; ++b)
+		{
+			square[a][b]setPieceAndColor(sq[a][b]->getPiece(), sq[a][b]->getColor());
+		}
+}
 
 void Board::printBoard() {
 	using namespace std;
@@ -195,7 +203,6 @@ bool Board::moveQueen(Square* thisQueen, Square* thatSpace) { //there might be p
 	int queenY = thisQueen->getY();
 	int thatX = thatSpace->getX();
 	int thatY = thatSpace->getY();
-	std::cout << "this";
 	int yIncrement;
 	int xIncrement;
 
@@ -241,7 +248,6 @@ bool Board::moveQueen(Square* thisQueen, Square* thatSpace) { //there might be p
 				}
 				else
 					return false;
-		//if()
 	}
 
 
@@ -463,3 +469,5 @@ bool Board::makeMove(int x1, int y1, int x2, int y2) {
 	}
 	return false;
 }
+
+Square* getBoard() { return &square; }
