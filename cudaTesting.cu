@@ -68,11 +68,25 @@ void forCuda(double *members, int *layerSizes, double* answers, double *input, i
     delete [] result;
 }
 
+void printTime(long timeDiff)
+{
+    int hours = floor((timeDiff / CLOCKS_PER_SEC) / 3600.0f);
+    int minuets = floor((timeDiff / CLOCKS_PER_SEC - hours * 3600) / 60.0f);
+    int seconds = (timeDiff / CLOCKS_PER_SEC) - hours * 3600.0f - minuets * 60.0f;
+    
+    if (hours < 10) cout << "0";
+    cout << hours << ":";
+    if(minuets < 10) cout << "0";
+    cout << minuets << ":";
+    if(seconds < 10) cout << "0";
+    cout << seconds;
+}
+
 int main()
 {
     vector<int> innerNodes = vector<int>();
-    // innerNodes.emplace_back(1536);
-    // innerNodes.emplace_back(768);
+    innerNodes.emplace_back(1536);
+    innerNodes.emplace_back(768);
     innerNodes.emplace_back(384);
 
     int numInput = 768;
@@ -122,6 +136,7 @@ int main()
     {
         toNext.push_back(false);
         toNext.push_back(true);
+        toNext.push_back(true);
         toNext.push_back(false);
         toNext.push_back(false);
     }
@@ -135,7 +150,9 @@ int main()
     int numMovesChecked = 100;
 
     cout << "Moves checked per \"game\" : " << avgMoves*numMovesChecked << endl;
-    for (int i = 0; i < 16; i++)
+    long totalTime = 0;
+    int numGens = 16;
+    for (int i = 0; i < numGens; i++)
     {
         clock_t begin_time = clock();
 
@@ -178,22 +195,21 @@ int main()
         if (myNetwork.nextGen(toNext))
         {
             clock_t end_time = clock();
-            float timeDiff = clock() - begin_time;
-            int hours = floor((timeDiff / CLOCKS_PER_SEC) / 3600.0f);
-            int minuets = floor((timeDiff / CLOCKS_PER_SEC - hours * 3600) / 60.0f);
-            int seconds = (timeDiff / CLOCKS_PER_SEC) - hours * 3600.0f - minuets * 60.0f;
+            long timeDiff = clock() - begin_time;
             cout << (i + 1) << "\t";
-            if (hours < 10) cout << "0";
-            cout << hours << ":";
-            if(minuets < 10) cout << "0";
-            cout << minuets << ":";
-            if(seconds < 10) cout << "0";
-            cout << seconds << endl;
-            cout << "-----------------" << endl;
+            printTime(timeDiff);
+            cout << endl << "-----------------" << endl;
+            totalTime += timeDiff;
         }
         else
             break;
     }
+    cout << "Total time : ";
+    printTime(totalTime);
+    cout << endl << "-----------------" << endl;
+    cout << "Avg time : ";
+    printTime(totalTime / numGens);
+    cout << endl;
 
 
     cudaFree(members);
